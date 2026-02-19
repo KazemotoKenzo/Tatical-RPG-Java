@@ -1,6 +1,7 @@
 package com.kz.tatical_rpg.Services;
 
 import com.kz.tatical_rpg.domain.Entity;
+import com.kz.tatical_rpg.enums.Etag;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +20,36 @@ public class CombatService {
     @PostConstruct
     public void mainRunner(){
         createEntityTest();
-        selectInput();
+
+        int i = 0;
+        while(enemies_hp > 0){
+            Entity entity = sequencelist.get(i);
+            if(entity.getHp() != 0){
+                for(int x = 1; x <= entity.getActions(); x++){
+                    int textTemp = (entity.getActions() - x + 1);
+                    showSequence();
+                    System.out.println( textTemp + (textTemp > 1 ? " actions" : " action") + " left.");
+                    if(entity.getTag() == Etag.PLAYER) {
+                        selectInput();
+                    } else {
+                        selectEnemy(0, 1);
+                    }
+                }
+            }
+            i++;
+            if(i >= sequencelist.toArray().length) i = 0;
+        }
+
+        System.out.println("All enemies has been slayed.\nThe game is over.");
+    }
+
+    private void showSequence(){
+        for(Entity i : sequencelist){ System.out.println("\n========================\n" + i + "\n========================\n"); }
     }
 
     private void selectInput(){
         while (true){
             try{
-                for(Entity i : sequencelist){ System.out.println("\n========================\n" + i + "\n========================\n"); }
                 System.out.println("Select a entity to deal damage: ");
                 select = scanner.nextInt();
 
@@ -38,36 +62,32 @@ public class CombatService {
                 scanner.nextLine();
             }
         }
-        selectEnemy(select);
+        selectEnemy(select, 5);
         scanner.nextLine();
     }
 
-    private void selectEnemy(int value){
-        int damage = 1;
-
+    private void selectEnemy(int value, int damage){
         Entity entity = sequencelist.get(value);
         entity.takeDamage(damage);
-        enemies_hp -= damage;
-        System.out.println(entity.getName() + " was hurt!\n Now it has " + entity.getHp() + "/" + entity.getHp_max() + " hp.");
+        if(entity.getTag() == Etag.ENEMIE) enemies_hp -= damage;
+        System.out.println(entity.getName() + " was hurt!\nNow it has " + entity.getHp() + "/" + entity.getHp_max() + " hp.");
     }
 
     private void addSequence(Entity entity){
         sequencelist.add(entity);
-        enemies_hp += entity.getHp_max();
+        if(entity.getTag() == Etag.ENEMIE) enemies_hp += entity.getHp_max();
         sequencelist.sort(Comparator.comparingInt(Entity::getInitiative));
     }
 
     private void createEntityTest(){
-        Entity entity1 = new Entity("Entity 1", 1, 10, 1);
-        Entity entity2 = new Entity("Entity 2", 2, 10, 1);
-        Entity entity3 = new Entity("Entity 3", 3, 10, 1);
-        Entity entity4 = new Entity("Entity 4", 4, 10, 1);
+        Entity entity1 = new Entity(Etag.PLAYER, "Entity 1", 1, 10, 1, 2);
+        Entity entity2 = new Entity(Etag.ENEMIE, "Entity 2", 2, 10, 1, 1);
+        Entity entity3 = new Entity(Etag.ENEMIE,"Entity 3", 3, 10, 1, 1);
+        Entity entity4 = new Entity(Etag.ENEMIE,"Entity 4", 4, 10, 1, 1);
 
         addSequence(entity4);
         addSequence(entity2);
         addSequence(entity3);
         addSequence(entity1);
-
-        for(Entity i : sequencelist){ System.out.println("\n========================\n" + i + "\n========================\n"); }
     }
 }

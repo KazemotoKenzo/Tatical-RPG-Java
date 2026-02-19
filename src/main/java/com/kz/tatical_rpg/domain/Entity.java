@@ -1,33 +1,56 @@
 package com.kz.tatical_rpg.domain;
 
+import com.kz.tatical_rpg.enums.Etag;
+
 public class Entity {
+    private Etag tag;
     private String name;
     private int initiative;
     private int actions;
     private int hp;
     private int hp_max;
     private int damage;
+    private boolean dead = false;
 
-    public Entity(String name, int initiative, int hp_max, int damage){
+    public Entity(Etag tag, String name, int initiative, int hp_max, int damage, int actions){
+        this.tag = tag;
         this.name = name;
         this.initiative = initiative;
         this.hp_max = hp_max;
         this.hp = this.hp_max;
         this.damage = damage;
-    }
-
-    public Entity(){
-        this("Unknown", 0, 0, 0);
+        this.actions = actions;
     }
 
     @Override
     public String toString(){
-        return this.name + "\nHP: " + this.hp + "/" + this.hp_max;
+        return this.name + (this.dead ? " || DEAD" : "") + " || HP: " + this.hp + "/" + this.hp_max;
+    }
+
+    private boolean isDead(){
+        if(this.hp <= 0){
+            this.hp = 0;
+            this.dead = true;
+        }
+        return this.dead;
+    }
+
+    public Entity(){
+        this(Etag.ENEMIE,"Unknown", 0, 0, 0, 1);
     }
 
     public int takeDamage(int damage_){
         this.hp -= damage_;
+        if(isDead()) System.out.println("The entity has been slayed.");
         return damage_;
+    }
+
+    public Etag getTag() {
+        return tag;
+    }
+
+    public void setTag(Etag tag) {
+        this.tag = tag;
     }
 
     public int getHp() {
