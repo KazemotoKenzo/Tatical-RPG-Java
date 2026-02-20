@@ -2,6 +2,8 @@ package com.kz.tatical_rpg.domain;
 
 import com.kz.tatical_rpg.enums.Etag;
 
+import java.util.List;
+
 public class Entity {
     private Etag tag;
     private String name;
@@ -11,6 +13,8 @@ public class Entity {
     private int hp_max;
     private int damage;
     private boolean dead = false;
+
+    private List<ISpell> spellslots;
 
     public Entity(Etag tag, String name, int initiative, int hp_max, int damage, int actions){
         this.tag = tag;
