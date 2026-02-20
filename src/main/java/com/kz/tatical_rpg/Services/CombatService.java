@@ -1,14 +1,11 @@
 package com.kz.tatical_rpg.Services;
 
-import com.kz.tatical_rpg.domain.Entity;
+import com.kz.tatical_rpg.domain.*;
 import com.kz.tatical_rpg.enums.Etag;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.InputMismatchException;
-import java.util.Scanner;
+import java.util.*;
 
 @Service
 public class CombatService {
@@ -30,7 +27,8 @@ public class CombatService {
                     showSequence();
                     System.out.println( textTemp + (textTemp > 1 ? " actions" : " action") + " left.");
                     if(entity.getTag() == Etag.PLAYER) {
-                        selectInput();
+                        //selectInput();
+                        selectSpell(entity);
                     } else {
                         selectEnemy(0, 1);
                     }
@@ -66,6 +64,49 @@ public class CombatService {
         scanner.nextLine();
     }
 
+    private void selectSpell(Entity entity){
+        ArrayList<ISpell> spell_list = entity.getSpellslots();
+
+        while (true){
+            try{
+                System.out.println("Select a entity to deal damage: ");
+                select = scanner.nextInt();
+
+                if(select >= 0 && select < sequencelist.toArray().length){
+                    break;
+                }   else { System.out.println("Error: Try selecting a number between 0 and " + (sequencelist.toArray().length-1)); scanner.nextLine(); }
+
+            }   catch (InputMismatchException e) {
+                System.out.println("Error: Try to input a integer number.");
+                scanner.nextLine();
+            }
+        }
+        scanner.nextLine();
+
+
+        ISpell spell = spell_list.get(select);
+        spell.description();
+
+        while (true){
+            try{
+                System.out.println("Select a entity to deal damage: ");
+                select = scanner.nextInt();
+
+                if(select >= 0 && select < sequencelist.toArray().length){
+                    break;
+                }   else { System.out.println("Error: Try selecting a number between 0 and " + (sequencelist.toArray().length-1)); scanner.nextLine(); }
+
+            }   catch (InputMismatchException e) {
+                System.out.println("Error: Try to input a integer number.");
+                scanner.nextLine();
+            }
+        }
+        scanner.nextLine();
+        Entity enemie = sequencelist.get(select);
+        spell.spellactive(enemie, entity);
+        System.out.println(entity.getName() + " was hurt!\nNow it has " + entity.getHp() + "/" + entity.getHp_max() + " hp.");
+    }
+
     private void selectEnemy(int value, int damage){
         Entity entity = sequencelist.get(value);
         entity.takeDamage(damage);
@@ -84,6 +125,13 @@ public class CombatService {
         Entity entity2 = new Entity(Etag.ENEMIE, "Entity 2", 2, 10, 1, 1);
         Entity entity3 = new Entity(Etag.ENEMIE,"Entity 3", 3, 10, 1, 1);
         Entity entity4 = new Entity(Etag.ENEMIE,"Entity 4", 4, 10, 1, 1);
+
+        AttackTarget attack = new AttackTarget();
+        HealTarget heal = new HealTarget();
+        SelfBuffDamage buff = new SelfBuffDamage();
+        entity1.addSpellslot(attack);
+        entity1.addSpellslot(heal);
+        entity1.addSpellslot(buff);
 
         addSequence(entity4);
         addSequence(entity2);

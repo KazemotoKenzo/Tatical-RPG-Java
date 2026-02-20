@@ -1,11 +1,11 @@
 package com.kz.tatical_rpg.domain;
 
 public class AttackTarget implements ISpell{
-    private int damage_multiplie;
+    private int spell_base_damage = 3;
 
     @Override
-    public void spellactive(Entity target, Entity multiplie) {
-        int damage = multiplie.getDamage() * this.damage_multiplie;
+    public void spellactive(Entity target, Entity entity_base) {
+        int damage = (int) ((entity_base.getDamage() + this.spell_base_damage) * entity_base.getDamage_multiplie());
 
         target.takeDamage(damage);
         System.out.println(target.getName() + " has taked " + damage + " damage.");

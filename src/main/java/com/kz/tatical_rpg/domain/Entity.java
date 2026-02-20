@@ -2,6 +2,7 @@ package com.kz.tatical_rpg.domain;
 
 import com.kz.tatical_rpg.enums.Etag;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Entity {
@@ -13,8 +14,9 @@ public class Entity {
     private int hp_max;
     private int damage;
     private boolean dead = false;
+    private float damage_multiplie;
 
-    private List<ISpell> spellslots;
+    private ArrayList<ISpell> spellslots = new ArrayList<>();
 
     public Entity(Etag tag, String name, int initiative, int hp_max, int damage, int actions){
         this.tag = tag;
@@ -24,6 +26,7 @@ public class Entity {
         this.hp = this.hp_max;
         this.damage = damage;
         this.actions = actions;
+        this.damage_multiplie = 1;
     }
 
     @Override
@@ -41,12 +44,41 @@ public class Entity {
 
     public Entity(){
         this(Etag.ENEMIE,"Unknown", 0, 0, 0, 1);
+        this.damage_multiplie = 1;
+    }
+
+    public void cap_multiplie_damage(){
+        if(this.damage_multiplie <= 0){
+            damage_multiplie = 1;
+        }
     }
 
     public int takeDamage(int damage_){
         this.hp -= damage_;
+
         if(isDead()) System.out.println("The entity has been slayed.");
         return damage_;
+    }
+
+    public float getDamage_multiplie() {
+        return damage_multiplie;
+    }
+
+    public void setDamage_multiplie(float damage_multiplie) {
+        this.damage_multiplie = damage_multiplie;
+        cap_multiplie_damage();
+    }
+
+    public void addSpellslot(ISpell spell){
+        this.spellslots.add(spell);
+    }
+
+    public ArrayList<ISpell> getSpellslots() {
+        return spellslots;
+    }
+
+    public void setSpellslots(ArrayList<ISpell> spellslots) {
+        this.spellslots = spellslots;
     }
 
     public Etag getTag() {

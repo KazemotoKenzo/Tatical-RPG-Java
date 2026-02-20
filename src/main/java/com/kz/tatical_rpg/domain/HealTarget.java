@@ -4,8 +4,8 @@ public class HealTarget implements ISpell{
     private int heal_base = 5;
 
     @Override
-    public void spellactive(Entity target, Entity multiplie) {
-        int heal = this.heal_base + multiplie.getHp() / 10;
+    public void spellactive(Entity target, Entity entity_base) {
+        int heal = this.heal_base + entity_base.getHp() / 10;
 
         target.takeDamage(-heal);
         System.out.println(target.getName() + " heals " + heal + " hp.");
