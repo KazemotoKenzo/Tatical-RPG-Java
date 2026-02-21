@@ -69,6 +69,10 @@ public class Entity {
         cap_multiplie_damage();
     }
 
+    public String getStatus(){
+        return this.name + " || " + this.hp + "/" + this.hp_max;
+    }
+
     public void addSpellslot(ISpell spell){
         this.spellslots.add(spell);
     }

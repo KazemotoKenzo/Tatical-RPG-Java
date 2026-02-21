@@ -12,7 +12,6 @@ public class CombatService {
     private ArrayList<Entity> sequencelist = new ArrayList<>();
     Scanner scanner = new Scanner(System.in);
     private int enemies_hp = 0;
-    int select;
 
     @PostConstruct
     public void mainRunner(){
@@ -28,7 +27,7 @@ public class CombatService {
                     System.out.println( textTemp + (textTemp > 1 ? " actions" : " action") + " left.");
                     if(entity.getTag() == Etag.PLAYER) {
                         //selectInput();
-                        selectSpell(entity);
+                        selectOptions(entity);
                     } else {
                         selectEnemy(0, 1);
                     }
@@ -45,62 +44,54 @@ public class CombatService {
         for(Entity i : sequencelist){ System.out.println("\n========================\n" + i + "\n========================\n"); }
     }
 
-    private void selectInput(){
+    private int selectInput(String mensage ,int finish){
+        int select;
+
         while (true){
             try{
-                System.out.println("Select a entity to deal damage: ");
+                System.out.println(mensage);
                 select = scanner.nextInt();
 
-                if(select >= 0 && select < sequencelist.toArray().length){
+                if(select >= 0 && select < finish){
                     break;
-                }   else { System.out.println("Error: Try selecting a number between 0 and " + (sequencelist.toArray().length-1)); scanner.nextLine(); }
+                }   else  System.out.println("Error: Try selecting a number between 0 and " + (finish - 1));
 
             }   catch (InputMismatchException e) {
                 System.out.println("Error: Try to input a integer number.");
-                scanner.nextLine();
             }
+            scanner.nextLine();
         }
-        selectEnemy(select, 5);
-        scanner.nextLine();
+
+        return select;
     }
 
-    private void selectSpell(Entity entity){
+    private <T> String genericList(ArrayList<T> items, boolean optional, java.util.function.Function<T, String> nameExtractor) {
+        StringBuilder message = new StringBuilder();
+
+        for (int i = 0; i < items.size(); i++) {
+            message.append("\n").append(optional ? (i + 1) : i)
+                    .append(" - ").append(nameExtractor.apply(items.get(i))).append(".");
+        }
+
+        String result = optional ? "0 - Return." : "";
+        return result + message.toString();
+    }
+
+    private void selectOptions(Entity entity){
         ArrayList<ISpell> spell_list = entity.getSpellslots();
 
-        while (true){
-            try{
-                System.out.println("Select a entity to deal damage: ");
-                select = scanner.nextInt();
+        String list_name = genericList(spell_list, false, s -> s.getName());
 
-                if(select >= 0 && select < sequencelist.toArray().length){
-                    break;
-                }   else { System.out.println("Error: Try selecting a number between 0 and " + (sequencelist.toArray().length-1)); scanner.nextLine(); }
-
-            }   catch (InputMismatchException e) {
-                System.out.println("Error: Try to input a integer number.");
-                scanner.nextLine();
-            }
-        }
-        scanner.nextLine();
-
+        int select = selectInput(list_name, spell_list.size());
 
         ISpell spell = spell_list.get(select);
         spell.description();
 
-        while (true){
-            try{
-                System.out.println("Select a entity to deal damage: ");
-                select = scanner.nextInt();
+        list_name = genericList(sequencelist, true, s -> s.getStatus());
+        select = selectInput(list_name, sequencelist.size() + 1);
 
-                if(select >= 0 && select < sequencelist.toArray().length){
-                    break;
-                }   else { System.out.println("Error: Try selecting a number between 0 and " + (sequencelist.toArray().length-1)); scanner.nextLine(); }
+        if(select != 0) select--;
 
-            }   catch (InputMismatchException e) {
-                System.out.println("Error: Try to input a integer number.");
-                scanner.nextLine();
-            }
-        }
         scanner.nextLine();
         Entity enemie = sequencelist.get(select);
         spell.spellactive(enemie, entity);

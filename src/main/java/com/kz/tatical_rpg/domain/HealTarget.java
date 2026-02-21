@@ -3,6 +3,8 @@ package com.kz.tatical_rpg.domain;
 public class HealTarget implements ISpell{
     private int heal_base = 5;
 
+    private String name = "Heal";
+
     @Override
     public void spellactive(Entity target, Entity entity_base) {
         int heal = this.heal_base + entity_base.getHp() / 10;
@@ -14,5 +16,10 @@ public class HealTarget implements ISpell{
     @Override
     public void description() {
         System.out.println("Select a target to Heal.");
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
     }
 }
