@@ -26,7 +26,6 @@ public class CombatService {
                     showSequence();
                     System.out.println( textTemp + (textTemp > 1 ? " actions" : " action") + " left.");
                     if(entity.getTag() == Etag.PLAYER) {
-                        //selectInput();
                         selectOptions(entity);
                     } else {
                         selectEnemy(0, 1);
@@ -41,7 +40,7 @@ public class CombatService {
     }
 
     private void showSequence(){
-        for(Entity i : sequencelist){ System.out.println("\n========================\n" + i + "\n========================\n"); }
+        for(Entity i : sequencelist){ System.out.println("========================\n" + i + "\n========================"); }
     }
 
     private int selectInput(String mensage ,int finish){
@@ -78,29 +77,33 @@ public class CombatService {
     }
 
     private void selectOptions(Entity entity){
-        ArrayList<ISpell> spell_list = entity.getSpellslots();
+        boolean exit = false;
+        while (!exit){
+            ArrayList<ISpell> spell_list = entity.getSpellslots();
 
-        String list_name = genericList(spell_list, false, s -> s.getName());
+            String list_name = genericList(spell_list, false, s -> s.getName());
 
-        int select = selectInput(list_name, spell_list.size());
+            int select = selectInput(list_name, spell_list.size());
 
-        ISpell spell = spell_list.get(select);
-        spell.description();
+            ISpell spell = spell_list.get(select);
+            spell.description();
 
-        list_name = genericList(sequencelist, true, s -> s.getStatus());
-        select = selectInput(list_name, sequencelist.size() + 1);
+            list_name = genericList(sequencelist, true, s -> s.getStatus());
+            select = selectInput(list_name, sequencelist.size() + 1);
 
-        if(select != 0) select--;
+            if(select == 0) continue;
 
-        scanner.nextLine();
-        Entity enemie = sequencelist.get(select);
-        spell.spellactive(enemie, entity);
-        System.out.println(entity.getName() + " was hurt!\nNow it has " + entity.getHp() + "/" + entity.getHp_max() + " hp.");
+            select--;
+
+            Entity enemie = sequencelist.get(select);
+            spell.spellactive(enemie, entity);
+            exit = !exit;
+        }
     }
 
     private void selectEnemy(int value, int damage){
         Entity entity = sequencelist.get(value);
-        entity.takeDamage(damage);
+        entity.takeDamage(damage, false);
         if(entity.getTag() == Etag.ENEMIE) enemies_hp -= damage;
         System.out.println(entity.getName() + " was hurt!\nNow it has " + entity.getHp() + "/" + entity.getHp_max() + " hp.");
     }
@@ -120,9 +123,12 @@ public class CombatService {
         AttackTarget attack = new AttackTarget();
         HealTarget heal = new HealTarget();
         SelfBuffDamage buff = new SelfBuffDamage();
+        BarrierTarget barrier = new BarrierTarget();
+
         entity1.addSpellslot(attack);
         entity1.addSpellslot(heal);
         entity1.addSpellslot(buff);
+        entity1.addSpellslot(barrier);
 
         addSequence(entity4);
         addSequence(entity2);

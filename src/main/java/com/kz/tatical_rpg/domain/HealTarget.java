@@ -2,6 +2,7 @@ package com.kz.tatical_rpg.domain;
 
 public class HealTarget implements ISpell{
     private int heal_base = 5;
+    private boolean true_damage = true;
 
     private String name = "Heal";
 
@@ -9,8 +10,8 @@ public class HealTarget implements ISpell{
     public void spellactive(Entity target, Entity entity_base) {
         int heal = this.heal_base + entity_base.getHp() / 10;
 
-        target.takeDamage(-heal);
-        System.out.println(target.getName() + " heals " + heal + " hp.");
+        target.takeDamage(-heal, true_damage);
+        System.out.println(target.getName() + " heals " + heal + " hp.\nNow it has " + target.getHp() + "/" + target.getHp_max() + " hp.");
     }
 
     @Override

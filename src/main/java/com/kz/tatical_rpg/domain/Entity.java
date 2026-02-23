@@ -3,7 +3,6 @@ package com.kz.tatical_rpg.domain;
 import com.kz.tatical_rpg.enums.Etag;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class Entity {
     private Etag tag;
@@ -15,6 +14,8 @@ public class Entity {
     private int damage;
     private boolean dead = false;
     private float damage_multiplie;
+    private int barrier = 0;
+    private int barrier_max = 0;
 
     private ArrayList<ISpell> spellslots = new ArrayList<>();
 
@@ -31,10 +32,12 @@ public class Entity {
 
     @Override
     public String toString(){
-        return this.name + (this.dead ? " || DEAD" : "") + " || HP: " + this.hp + "/" + this.hp_max;
+        return this.name + (this.dead ? " || DEAD" : "") + " || HP: " + this.hp + "/" + this.hp_max + (this.barrier > 0 ? " |" + this.barrier + "/" + this.barrier_max + "|" : "");
     }
 
     private boolean isDead(){
+        if(this.hp >= this.hp_max)  this.hp = this.hp_max;
+
         if(this.hp <= 0){
             this.hp = 0;
             this.dead = true;
@@ -53,11 +56,31 @@ public class Entity {
         }
     }
 
-    public int takeDamage(int damage_){
+    public int takeDamage(int damage_, boolean true_damage){
+        if(!true_damage && this.barrier > 0){
+            int discount = damage_ - this.barrier;
+            if (discount < 0) discount = 0;
+            this.barrier -= damage_;
+            if(this.barrier <= 0) {
+                this.barrier_max = 0;
+                this.barrier = 0;
+            }
+            damage_ = discount;
+        }
+
         this.hp -= damage_;
 
         if(isDead()) System.out.println("The entity has been slayed.");
         return damage_;
+    }
+
+    public int getBarrier_max() {
+        return barrier_max;
+    }
+
+    public void setBarrier_max(int barrier_max) {
+        this.barrier_max = barrier_max;
+        this.barrier = this.barrier_max;
     }
 
     public float getDamage_multiplie() {
@@ -87,6 +110,14 @@ public class Entity {
 
     public Etag getTag() {
         return tag;
+    }
+
+    public int getBarrier() {
+        return barrier;
+    }
+
+    public void setBarrier(int barrier) {
+        this.barrier = barrier;
     }
 
     public void setTag(Etag tag) {
