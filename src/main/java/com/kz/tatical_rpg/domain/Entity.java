@@ -108,6 +108,14 @@ public class Entity {
         this.spellslots = spellslots;
     }
 
+    public void setDead(boolean dead) {
+        this.dead = dead;
+    }
+
+    public boolean getDead() {
+        return this.dead;
+    }
+
     public Etag getTag() {
         return tag;
     }

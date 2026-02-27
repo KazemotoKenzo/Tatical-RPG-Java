@@ -1,34 +1,33 @@
 package com.kz.tatical_rpg.controller;
 
+import com.kz.tatical_rpg.domain.Entity;
+
 public class EntityController {
-    /*
-    public int takeDamage(int damage_, boolean true_damage){
-        if(!true_damage && this.barrier > 0){
-            int discount = damage_ - this.barrier;
+    public int takeDamage(Entity entity, int damage_, boolean true_damage){
+        if(!true_damage && entity.getBarrier() > 0){
+            int discount = damage_ - entity.getBarrier();
             if (discount < 0) discount = 0;
-            this.barrier -= damage_;
-            if(this.barrier <= 0) {
-                this.barrier_max = 0;
-                this.barrier = 0;
+            entity.setBarrier(entity.getBarrier() - damage_);
+            if(entity.getBarrier() <= 0) {
+                entity.setBarrier_max(0);
+                entity.setBarrier(0);
             }
             damage_ = discount;
         }
 
-        this.hp -= damage_;
+        entity.setHp(entity.getHp() - damage_);
 
-        if(isDead()) System.out.println("The entity has been slayed.");
+        if(this.isDead(entity)) System.out.println("The entity has been slayed.");
         return damage_;
     }
-    */
-    /*
-    private boolean isDead(){
-        if(this.hp >= this.hp_max)  this.hp = this.hp_max;
 
-        if(this.hp <= 0){
-            this.hp = 0;
-            this.dead = true;
+    private boolean isDead(Entity entity){
+        if(entity.getHp() >= entity.getHp_max()) entity.setHp(entity.getHp_max());
+
+        if(entity.getHp() <= 0){
+            entity.setHp(0);
+            entity.setDead(true);
         }
-        return this.dead;
+        return entity.getDead();
     }
-     */
 }
