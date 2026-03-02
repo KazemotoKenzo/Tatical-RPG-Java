@@ -1,5 +1,7 @@
 package com.kz.tatical_rpg.domain;
 
+import com.kz.tatical_rpg.controller.EntityController;
+
 public class HealTarget implements ISpell{
     private int heal_base = 5;
     private boolean true_damage = true;
@@ -10,7 +12,8 @@ public class HealTarget implements ISpell{
     public void spellactive(Entity target, Entity entity_base) {
         int heal = this.heal_base + entity_base.getHp() / 10;
 
-        target.takeDamage(-heal, true_damage);
+        EntityController.takeDamage(target, -heal, true_damage);
+        //target.takeDamage(-heal, true_damage);
         System.out.println(target.getName() + " heals " + heal + " hp.\nNow it has " + target.getHp() + "/" + target.getHp_max() + " hp.");
     }
 
