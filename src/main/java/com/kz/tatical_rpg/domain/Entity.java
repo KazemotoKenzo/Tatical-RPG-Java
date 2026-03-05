@@ -56,6 +56,7 @@ public class Entity {
         }
     }
 
+    /*
     public int takeDamage(int damage_, boolean true_damage){
         if(!true_damage && this.barrier > 0){
             int discount = damage_ - this.barrier;
@@ -73,6 +74,7 @@ public class Entity {
         if(isDead()) System.out.println("The entity has been slayed.");
         return damage_;
     }
+     */
 
     public int getBarrier_max() {
         return barrier_max;

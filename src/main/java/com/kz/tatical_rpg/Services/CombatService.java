@@ -1,5 +1,6 @@
 package com.kz.tatical_rpg.Services;
 
+import com.kz.tatical_rpg.controller.EntityController;
 import com.kz.tatical_rpg.domain.*;
 import com.kz.tatical_rpg.enums.Etag;
 import jakarta.annotation.PostConstruct;
@@ -103,7 +104,7 @@ public class CombatService {
 
     private void selectEnemy(int value, int damage){
         Entity entity = sequencelist.get(value);
-        entity.takeDamage(damage, false);
+        EntityController.takeDamage(entity ,damage, false);
         if(entity.getTag() == Etag.ENEMIE) enemies_hp -= damage;
         System.out.println(entity.getName() + " was hurt!\nNow it has " + entity.getHp() + "/" + entity.getHp_max() + " hp.");
     }
