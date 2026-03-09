@@ -35,6 +35,12 @@ public class Entity {
         return this.name + (this.dead ? " || DEAD" : "") + " || HP: " + this.hp + "/" + this.hp_max + (this.barrier > 0 ? " |" + this.barrier + "/" + this.barrier_max + "|" : "");
     }
 
+    public Entity(){
+        this(Etag.ENEMIE,"Unknown", 0, 0, 0, 1);
+        this.damage_multiplie = 1;
+    }
+
+    /*
     private boolean isDead(){
         if(this.hp >= this.hp_max)  this.hp = this.hp_max;
 
@@ -44,17 +50,7 @@ public class Entity {
         }
         return this.dead;
     }
-
-    public Entity(){
-        this(Etag.ENEMIE,"Unknown", 0, 0, 0, 1);
-        this.damage_multiplie = 1;
-    }
-
-    public void cap_multiplie_damage(){
-        if(this.damage_multiplie <= 0){
-            damage_multiplie = 1;
-        }
-    }
+    */
 
     /*
     public int takeDamage(int damage_, boolean true_damage){
@@ -87,6 +83,12 @@ public class Entity {
 
     public float getDamage_multiplie() {
         return damage_multiplie;
+    }
+
+    private void cap_multiplie_damage(){
+        if(this.damage_multiplie <= 0){
+            damage_multiplie = 1;
+        }
     }
 
     public void setDamage_multiplie(float damage_multiplie) {
