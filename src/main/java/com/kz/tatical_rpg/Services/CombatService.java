@@ -10,7 +10,7 @@ import java.util.*;
 
 @Service
 public class CombatService {
-    private ArrayList<Entity> sequencelist = new ArrayList<>();
+    private ArrayList<EntityStats> sequencelist = new ArrayList<>();
     Scanner scanner = new Scanner(System.in);
     private int enemies_hp = 0;
 
@@ -20,7 +20,7 @@ public class CombatService {
 
         int i = 0;
         while(enemies_hp > 0){
-            Entity entity = sequencelist.get(i);
+            EntityStats entity = sequencelist.get(i);
             if(entity.getHp() != 0){
                 for(int x = 1; x <= entity.getActions(); x++){
                     int textTemp = (entity.getActions() - x + 1);
@@ -41,7 +41,7 @@ public class CombatService {
     }
 
     private void showSequence(){
-        for(Entity i : sequencelist){ System.out.println("========================\n" + i + "\n========================"); }
+        for(EntityStats i : sequencelist){ System.out.println("========================\n" + i + "\n========================"); }
     }
 
     private int selectInput(String mensage ,int finish){
@@ -77,7 +77,7 @@ public class CombatService {
         return result + message.toString();
     }
 
-    private void selectOptions(Entity entity){
+    private void selectOptions(EntityStats entity){
         boolean exit = false;
         while (!exit){
             ArrayList<ISpell> spell_list = entity.getSpellslots();
@@ -96,30 +96,30 @@ public class CombatService {
 
             select--;
 
-            Entity enemie = sequencelist.get(select);
+            EntityStats enemie = sequencelist.get(select);
             spell.spellactive(enemie, entity);
             exit = !exit;
         }
     }
 
     private void selectEnemy(int value, int damage){
-        Entity entity = sequencelist.get(value);
+        EntityStats entity = sequencelist.get(value);
         EntityController.takeDamage(entity ,damage, false);
         if(entity.getTag() == Etag.ENEMIE) enemies_hp -= damage;
         System.out.println(entity.getName() + " was hurt!\nNow it has " + entity.getHp() + "/" + entity.getHp_max() + " hp.");
     }
 
-    private void addSequence(Entity entity){
+    private void addSequence(EntityStats entity){
         sequencelist.add(entity);
         if(entity.getTag() == Etag.ENEMIE) enemies_hp += entity.getHp_max();
-        sequencelist.sort(Comparator.comparingInt(Entity::getInitiative));
+        sequencelist.sort(Comparator.comparingInt(EntityStats::getInitiative));
     }
 
     private void createEntityTest(){
-        Entity entity1 = new Entity(Etag.PLAYER, "Entity 1", 1, 10, 1, 2);
-        Entity entity2 = new Entity(Etag.ENEMIE, "Entity 2", 2, 10, 1, 1);
-        Entity entity3 = new Entity(Etag.ENEMIE,"Entity 3", 3, 10, 1, 1);
-        Entity entity4 = new Entity(Etag.ENEMIE,"Entity 4", 4, 10, 1, 1);
+        EntityStats entity1 = new EntityStats(Etag.PLAYER, "Entity 1", 1, 10, 1, 2);
+        EntityStats entity2 = new EntityStats(Etag.ENEMIE, "Entity 2", 2, 10, 1, 1);
+        EntityStats entity3 = new EntityStats(Etag.ENEMIE,"Entity 3", 3, 10, 1, 1);
+        EntityStats entity4 = new EntityStats(Etag.ENEMIE,"Entity 4", 4, 10, 1, 1);
 
         AttackTarget attack = new AttackTarget();
         HealTarget heal = new HealTarget();

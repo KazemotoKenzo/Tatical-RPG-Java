@@ -6,7 +6,7 @@ public class SelfBuffDamage implements ISpell{
     private String name = "Self Buff";
 
     @Override
-    public void spellactive(Entity target, Entity entity_base) {
+    public void spellactive(EntityStats target, EntityStats entity_base) {
         entity_base.setDamage_multiplie(this.buff_multiplie);
     }
 

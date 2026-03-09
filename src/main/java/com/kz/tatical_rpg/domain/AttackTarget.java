@@ -9,7 +9,7 @@ public class AttackTarget implements ISpell{
     private String name = "Attack";
 
     @Override
-    public void spellactive(Entity target, Entity entity_base) {
+    public void spellactive(EntityStats target, EntityStats entity_base) {
         int damage = (int) ((entity_base.getDamage() + this.spell_base_damage) * entity_base.getDamage_multiplie());
 
         EntityController.takeDamage(target, damage, true_damage);

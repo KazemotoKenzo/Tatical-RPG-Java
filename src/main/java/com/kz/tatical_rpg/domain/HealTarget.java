@@ -9,7 +9,7 @@ public class HealTarget implements ISpell{
     private String name = "Heal";
 
     @Override
-    public void spellactive(Entity target, Entity entity_base) {
+    public void spellactive(EntityStats target, EntityStats entity_base) {
         int heal = this.heal_base + entity_base.getHp() / 10;
 
         EntityController.takeDamage(target, -heal, true_damage);
