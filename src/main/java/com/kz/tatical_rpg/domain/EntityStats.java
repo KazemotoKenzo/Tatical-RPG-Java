@@ -1,31 +1,55 @@
 package com.kz.tatical_rpg.domain;
 
 import com.kz.tatical_rpg.enums.Etag;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 
+@Entity
+@Table(name = "tb_Entity_Stats")
 public class EntityStats {
     @Id
-    @GeneratedValue()
+    @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="entity_seq")
+    @SequenceGenerator(name="entity_seq", sequenceName="sq_entity", initialValue = 1, allocationSize = 1)
     private Integer id;
 
-    private Etag tag;
+    @Column(name = "name", nullable = false, length = 50)
     private String name;
+
+
+    @Column(name = "initiative", nullable = false)
     private Integer initiative;
+
+    @Column(name = "actions", nullable = false)
     private Integer actions;
+
+    @Column(name = "hp", nullable = false)
     private Integer hp;
+
+    @Column(name = "hp_max", nullable = false)
     private Integer hp_max;
+
+    @Column(name = "damage", nullable = false)
     private Integer damage;
+
+    @Column(name = "dead", nullable = false)
     private boolean dead = false;
+
+    @Column(name = "damage_multiplie", nullable = false)
     private Float damage_multiplie;
+
+    @Column(name = "barrier", nullable = false)
     private Integer barrier = 0;
+
+    @Column(name = "barrier_max", nullable = false)
     private Integer barrier_max = 0;
 
-    private ArrayList<ISpell> spellslots = new ArrayList<>();
+    private ArrayList<ISpell> spellslots;
 
-    public EntityStats(Etag tag, String name, int initiative, int hp_max, int damage, int actions){
+    private Etag tag;
+
+
+    public EntityStats(Etag tag, String name, Integer initiative, Integer hp_max, Integer damage, Integer actions){
         this.tag = tag;
         this.name = name;
         this.initiative = initiative;
@@ -34,6 +58,7 @@ public class EntityStats {
         this.damage = damage;
         this.actions = actions;
         this.damage_multiplie = 1f;
+        this.spellslots = new ArrayList<>();
     }
 
     public EntityStats(){
